@@ -39,7 +39,7 @@ public class MapGameService implements GameService {
         }
 
         Game game = gameOptional.get();
-        game.setStatus(GameStatus.JOINERS_TURN);
+        game.setStatus(GameStatus.JOINER_TURN);
         gameRepository.updateGame(game);
 
         return playerRepository.addPlayer(gameId, false);
@@ -63,6 +63,12 @@ public class MapGameService implements GameService {
         }
 
         Game game = gameOptional.get();
+
+        if ((player.isOwner() && game.getStatus() != GameStatus.OWNER_TURN) ||
+                (!player.isOwner() && game.getStatus() != GameStatus.JOINER_TURN)) {
+            return PlaceMarkStatus.OTHER_PLAYER_TURN;
+        }
+
         PlaceMarkStatus placeMarkStatus = gameRepository.placeMark(game, player, placeMarkDto.getPosition());
 
         checkForWin(game);
@@ -92,9 +98,9 @@ public class MapGameService implements GameService {
         Game game = gameOptional.get();
 
         switch (game.getStatus()) {
-            case OWNERS_TURN:
+            case OWNER_TURN:
                 return player.isOwner() ? GameStatus.YOUR_TURN : GameStatus.OTHER_PLAYER_TURN;
-            case JOINERS_TURN:
+            case JOINER_TURN:
                 return player.isOwner() ? GameStatus.OTHER_PLAYER_TURN : GameStatus.YOUR_TURN;
             case OWNER_WON:
                 return player.isOwner() ? GameStatus.YOU_WON : GameStatus.YOU_LOST;

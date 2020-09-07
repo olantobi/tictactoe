@@ -11,5 +11,5 @@ public interface GameRepository {
     Optional<Game> getGame(int gameId);
     PlaceMarkStatus placeMark(Game game, Player player, String position);
     void updateGame(Game game);
-
+    void reset();
 }

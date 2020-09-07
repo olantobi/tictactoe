@@ -33,6 +33,12 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return new ErrorDto(Errors.INVALID_PLAYER.getMessage());
     }
 
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(InvalidPositionException.class)
+    public ErrorDto handle(final InvalidPositionException exception) {
+        return new ErrorDto(Errors.INVALID_POSITION.getMessage());
+    }
+
     @ResponseStatus(HttpStatus.FORBIDDEN)
     @ExceptionHandler(AccessDeniedException.class)
     public ErrorDto handle(final AccessDeniedException exception) {

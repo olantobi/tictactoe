@@ -9,4 +9,5 @@ public interface PlayerRepository {
     Player addPlayer(int gameId, boolean isOwner);
     Optional<Player> getPlayer(UUID playerSessionId);
     Optional<Player> getPlayer(String playerSessionId);
+    void reset();
 }

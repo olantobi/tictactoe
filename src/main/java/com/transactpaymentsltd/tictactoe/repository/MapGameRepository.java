@@ -9,8 +9,6 @@ import com.transactpaymentsltd.tictactoe.model.Player;
 import com.transactpaymentsltd.tictactoe.util.GameUtil;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
@@ -20,8 +18,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class MapGameRepository implements GameRepository {
     private final Map<Integer, Game> gameStore = new ConcurrentHashMap<>();
     private final AtomicInteger gameCounter = new AtomicInteger(0);
-    private static final List<Integer> ownerPositions = new ArrayList<>();
-    private static final List<Integer> joinerPositions = new ArrayList<>();
 
     public Optional<Game> getGame(int gameId) {
         return Optional.ofNullable(gameStore.get(gameId));
@@ -44,10 +40,10 @@ public class MapGameRepository implements GameRepository {
 
         if (player.isOwner()) {
             gameState[rowIndex][colIndex] = GameConstants.GAME_OWNERS_MARK;
-            game.setStatus(GameStatus.JOINERS_TURN);
+            game.setStatus(GameStatus.JOINER_TURN);
         } else {
             gameState[rowIndex][colIndex] = GameConstants.GAME_JOINERS_MARK;
-            game.setStatus(GameStatus.OWNERS_TURN);
+            game.setStatus(GameStatus.OWNER_TURN);
         }
         game.setGameState(gameState);
 
@@ -72,5 +68,10 @@ public class MapGameRepository implements GameRepository {
         gameStore.put(gameId, game);
 
         return game;
+    }
+
+    public void reset() {
+        gameCounter.set(0);
+        gameStore.clear();
     }
 }

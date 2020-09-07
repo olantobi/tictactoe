@@ -31,4 +31,8 @@ public class MapPlayerRepository implements PlayerRepository {
     public Optional<Player> getPlayer(String playerSessionId) {
         return getPlayer(UUID.fromString(playerSessionId));
     }
+
+    public void reset() {
+        playerStore.clear();
+    }
 }

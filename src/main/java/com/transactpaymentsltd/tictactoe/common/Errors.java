@@ -9,6 +9,8 @@ public enum Errors {
 
     INVALID_PLAYER("Invalid auth-token header specified"),
 
+    INVALID_POSITION("Invalid position"),
+
     GAME_ACCESS_DENIED("Sorry, you do not have access to this game");
 
     @Getter

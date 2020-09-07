@@ -20,6 +20,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.UUID;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -86,7 +87,7 @@ public class GameControllerTest {
         int gameId = 1;
         PlaceMarkRequestDto requestDto = new PlaceMarkRequestDto("A1");
 
-        given(gameService.placeMark(gameId, String.valueOf(playerUuid), requestDto)).willReturn(PlaceMarkStatus.OK);
+        given(gameService.placeMark(any(), any(), any())).willReturn(PlaceMarkStatus.OK);
 
         this.mockMvc.perform(put("/game/"+gameId)
                 .header(HeaderConstants.AUTH_TOKEN, playerUuid.toString())

@@ -48,9 +48,9 @@ public class GameController {
     public ResponseEntity<?> placeMark(@PathVariable("id") Integer id,
                                        @RequestHeader(HeaderConstants.AUTH_TOKEN) String authToken,
                                        @Valid @RequestBody PlaceMarkRequestDto placeMarkDto) {
-        gameService.placeMark(id, authToken, placeMarkDto);
+        PlaceMarkStatus placeMarkStatus = gameService.placeMark(id, authToken, placeMarkDto);
 
-        return ResponseEntity.ok(new PlaceMarkResponseDto(PlaceMarkStatus.OK));
+        return ResponseEntity.ok(new PlaceMarkResponseDto(placeMarkStatus));
     }
 
     @GetMapping("/{id}")
