@@ -1,7 +1,9 @@
 package com.transactpaymentsltd.tictactoe.service;
 
+import com.transactpaymentsltd.tictactoe.common.GameConstants;
 import com.transactpaymentsltd.tictactoe.dto.PlaceMarkRequestDto;
 import com.transactpaymentsltd.tictactoe.enumeration.GameStatus;
+import com.transactpaymentsltd.tictactoe.enumeration.PlaceMarkStatus;
 import com.transactpaymentsltd.tictactoe.exception.AccessDeniedException;
 import com.transactpaymentsltd.tictactoe.exception.InvalidGameException;
 import com.transactpaymentsltd.tictactoe.exception.InvalidPlayerException;
@@ -12,6 +14,8 @@ import com.transactpaymentsltd.tictactoe.repository.PlayerRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -42,7 +46,7 @@ public class MapGameService implements GameService {
     }
 
     @Override
-    public boolean placeMark(Integer gameId, String authToken, PlaceMarkRequestDto placeMarkDto) {
+    public PlaceMarkStatus placeMark(Integer gameId, String authToken, PlaceMarkRequestDto placeMarkDto) {
         Optional<Game> gameOptional = gameRepository.getGame(gameId);
         if (!gameOptional.isPresent()) {
             throw new InvalidGameException(gameId);
@@ -59,9 +63,13 @@ public class MapGameService implements GameService {
         }
 
         Game game = gameOptional.get();
-        gameRepository.placeMark(game, player, placeMarkDto.getPosition());
+        PlaceMarkStatus placeMarkStatus = gameRepository.placeMark(game, player, placeMarkDto.getPosition());
 
-        return true;
+        checkForWin(game);
+
+        checkForDraw(game);
+
+        return placeMarkStatus;
     }
 
     @Override
@@ -97,5 +105,50 @@ public class MapGameService implements GameService {
             default:
                 return game.getStatus();
         }
+    }
+
+    private void checkForWin(Game game) {
+        int[] topRow = {0, 0, 0, 1, 0, 2};
+        int[] midRow = {1, 0, 1, 1, 1, 2};
+        int[] bottomRow = {2, 0, 2, 1, 2, 2};
+        int[] leftCol = {0, 0, 1, 0, 2, 0};
+        int[] midCol = {0, 1, 1, 1,  2, 1};
+        int[] rightCol = {0, 2, 1, 2, 2, 2};
+        int[] backSlashCross = {0, 0, 1, 1, 2, 2};
+        int[] forwardSlashCross = {0, 2, 1, 1, 2, 0};
+
+        List<int[]> winConditions = new ArrayList<>();
+        winConditions.add(topRow);
+        winConditions.add(midRow);
+        winConditions.add(bottomRow);
+        winConditions.add(leftCol);
+        winConditions.add(midCol);
+        winConditions.add(rightCol);
+        winConditions.add(backSlashCross);
+        winConditions.add(forwardSlashCross);
+
+        char[][] gameState = game.getGameState();
+
+        for (int[] i : winConditions) {
+            if (gameState[i[0]][i[1]] != 0 && gameState[i[0]][i[1]] == gameState[i[2]][i[3]] && gameState[i[2]][i[3]] == gameState[i[4]][i[5]]) {
+                GameStatus status = gameState[i[0]][i[1]] == GameConstants.GAME_OWNERS_MARK ? GameStatus.OWNER_WON : GameStatus.JOINER_WON;
+                game.setStatus(status);
+                gameRepository.updateGame(game);
+                break;
+            }
+        }
+    }
+
+    public void checkForDraw(Game game) {
+        for (char [] row : game.getGameState()) {
+            for (char c : row) {
+               if (c == 0) {        // Empty board space
+                   return;
+               }
+            }
+        }
+
+        game.setStatus(GameStatus.DRAW);
+        gameRepository.updateGame(game);
     }
 }

@@ -1,5 +1,5 @@
 package com.transactpaymentsltd.tictactoe.enumeration;
 
 public enum PlaceMarkStatus {
-    SPACE_TAKE, OK
+    SPACE_TAKEN, OK
 }

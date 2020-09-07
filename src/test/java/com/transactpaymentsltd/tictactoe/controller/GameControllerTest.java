@@ -25,7 +25,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(controllers = GameController.class)
-public class GameControllerITTest {
+public class GameControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -86,14 +86,14 @@ public class GameControllerITTest {
         int gameId = 1;
         PlaceMarkRequestDto requestDto = new PlaceMarkRequestDto("A1");
 
-        given(gameService.placeMark(gameId, String.valueOf(playerUuid), requestDto)).willReturn(true);
+        given(gameService.placeMark(gameId, String.valueOf(playerUuid), requestDto)).willReturn(PlaceMarkStatus.OK);
 
         this.mockMvc.perform(put("/game/"+gameId)
                 .header(HeaderConstants.AUTH_TOKEN, playerUuid.toString())
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(objectMapper.writeValueAsString(requestDto)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.result", is(PlaceMarkStatus.OK)));
+                .andExpect(jsonPath("$.result", is(PlaceMarkStatus.OK.name())));
     }
 
     @Test
