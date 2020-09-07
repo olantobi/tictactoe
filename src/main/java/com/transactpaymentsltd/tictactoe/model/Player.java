@@ -9,6 +9,6 @@ import java.util.UUID;
 @Builder
 public class Player {
     private UUID playerSessionId;
-    private Game game;
     private Integer gameId;
+    private boolean isOwner;
 }

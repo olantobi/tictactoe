@@ -27,6 +27,18 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(InvalidPlayerException.class)
+    public ErrorDto handle(final InvalidPlayerException exception) {
+        return new ErrorDto(Errors.INVALID_PLAYER.getMessage());
+    }
+
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    @ExceptionHandler(AccessDeniedException.class)
+    public ErrorDto handle(final AccessDeniedException exception) {
+        return new ErrorDto(Errors.GAME_ACCESS_DENIED.getMessage());
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(RuntimeException.class)
     public void handle(final RuntimeException exception) {
     }
