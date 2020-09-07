@@ -10,4 +10,4 @@ I designed the game on paper and analyzed the player interactions with the gameb
 
 ### What would you need to change in the code if the next feature was to generalize the game to NxN size boards?
 
-I would need to change is the size of the 2-dimensional array and then update the winning conditions array list.
+What I would need to change is the size of the 2-dimensional array and then update the winning conditions array list.

@@ -9,6 +9,9 @@ import com.transactpaymentsltd.tictactoe.enumeration.GameStatus;
 import com.transactpaymentsltd.tictactoe.enumeration.PlaceMarkStatus;
 import com.transactpaymentsltd.tictactoe.model.Player;
 import com.transactpaymentsltd.tictactoe.service.GameService;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,6 +25,10 @@ import javax.validation.Valid;
 public class GameController {
     private final GameService gameService;
 
+    @ApiOperation("Create new game.")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "Returns response header and invitation url", response = NewGameDto.class)
+    })
     @PostMapping
     public ResponseEntity<?> createNewGame() {
         Player player = gameService.createGame();
@@ -35,6 +42,10 @@ public class GameController {
                 .body(new NewGameDto(invitationUrl));
     }
 
+    @ApiOperation("Join game.")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "Returns response header and game status", response = GameStateDto.class)
+    })
     @PostMapping("/{id}/join")
     public ResponseEntity<?> joinGame(@PathVariable("id") Integer id) {
         Player player = gameService.joinGame(id);
@@ -44,6 +55,10 @@ public class GameController {
                 .body(new GameStateDto(GameStatus.YOUR_TURN));
     }
 
+    @ApiOperation("Placing a mark.")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "Returns result OK or SPACE_TAKEN if there's another mark placed in the requested position", response = PlaceMarkResponseDto.class)
+    })
     @PutMapping("/{id}")
     public ResponseEntity<?> placeMark(@PathVariable("id") Integer id,
                                        @RequestHeader(HeaderConstants.AUTH_TOKEN) String authToken,
@@ -53,6 +68,10 @@ public class GameController {
         return ResponseEntity.ok(new PlaceMarkResponseDto(placeMarkStatus));
     }
 
+    @ApiOperation("Game state.")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "Returns the status of the game", response = GameStateDto.class)
+    })
     @GetMapping("/{id}")
     public ResponseEntity<?> getGameState(@PathVariable("id") Integer id,
                                           @RequestHeader(HeaderConstants.AUTH_TOKEN) String authToken) {
