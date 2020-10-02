@@ -8,7 +8,7 @@
         <version>2.3.3.RELEASE</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
-    <groupId>com.transactpaymentsltd</groupId>
+    <groupId>com.liferon</groupId>
     <artifactId>tictactoe</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>tictactoe</name>
