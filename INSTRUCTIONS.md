@@ -1,7 +1,4 @@
-# Transact Payments LTD
-
-## Programming task for backend Java developer
-
+## Programming task
 Write a simple REST API allowing to play a tic-tac-toe game over 3x3 board allowing
 for multiple games to be played simultaneously.
 
